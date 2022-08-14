@@ -3,13 +3,12 @@
 /*Contra Ex.: ({[(2)]}), [2-{x-5}] */
 
 
-function main(expressions){
+function main(expression){
 	let regExModulado, stringAux;
-	for(let i = 0; i < expressions.length; i++){
-		regExModulado   = spacesRemove(expressions[i]);
-		stringAux = (lexicalAnalyzer(regExModulado) == "") ? "ACEITO!!!" : lexicalAnalyzer(regExModulado);
-		console.log(expressions[i] + " = " + stringAux);
-	}
+	regExModulado   = spacesRemove(expression);
+	console.log(regExModulado);
+	let returnLexicalAnalyzer = lexicalAnalyzer(regExModulado);
+	console.log((returnLexicalAnalyzer == 0) ? "ACEITO!!!" : returnLexicalAnalyzer + " ERROR!!!");
 }
 
 /* função que remove todos os espaços para ajudar na análisa léxica */
@@ -20,45 +19,47 @@ function spacesRemove(regExString){
 
 /* função que irá validar, como analisador lexico a expressão enviada */
 function lexicalAnalyzer(regExModulado){
+	let countError = 0;
 	let messageTotalError = "";
-	
+
 	/*caso 1: verifica existe apenas os caracteres possíveis da linguagem: letras, numeros, sinais, {}, [], ()*/
-	if(!checkCase1(regExModulado)) messageTotalError+= "(caracteres inválidos)";
+	if(!checkCase1(regExModulado)) countError++;
 
 	/*caso 2: verifica se as chaves, colchetes e parenteses tem valores pares. isso não elimina o fato de poder existir expressões do tipo: {a-][+10}*/
-	if(!checkCase2(regExModulado)) messageTotalError+= "(valores ímpares de barramentos)"
+	if(!checkCase2(regExModulado)) countError++;
 
 	/*caso 3: verifica se as chaves, colchetes e parenteses tem seu valor sintáxico, ou seja, se ao abrir, se fecha*/
-	if(!checkCase3(regExModulado)) messageTotalError+= "(abertura ou fechamento inválido)"
+	if(!checkCase3(regExModulado)) countError++;
 	
 	/*caso 4: conferir se a hierarquia das chaves, colchetes e parenteses foram obedecidas*/
-	if(!checkCase4(regExModulado)) messageTotalError+= "(hierarquia inválida)"
+	if(!checkCase4(regExModulado)) countError++;
 
 	/*caso 5: verifica se existe um final e início de chaves/colchetes/parenteses consecutivamente sem um sinal entre eles: }{, ][, )(*/
-	if(!checkCase5(regExModulado)) messageTotalError+= "(barramentos abertos)"
+	if(!checkCase5(regExModulado)) countError++;
 
 	/*caso 6: verifica se existe sinais consecutivos */
-	if(!checkCase6(regExModulado)) messageTotalError+= "(sinais consecutivos)"
+	if(!checkCase6(regExModulado)) countError++;
 
 	/*caso 7: verifica se existe um numero após ou antes de uma chave/colchetes/parenteses sem um sinal entre eles: 3{}, ()1, 2[]6*/
-	if(!checkCase7(regExModulado)) messageTotalError+= "(falta de sinais)"
-
-	return messageTotalError;
+	if(!checkCase7(regExModulado)) countError++;
+	
+	return countError;
 }
 
 function checkCase1(regExModulado){
 	const re = new RegExp("[^a-z0-9A-Z\\}\\]\\)\\{\\[\\(\\*\\/\\+\\- ]", "g");
-	return((regExModulado.match(re) == null) ? true : false);
+	if(!(regExModulado.match(re) == null)) return console.log("(caracteres inválidos)            -> " + regExModulado.match(re));
+	return false;
 }
 
 function checkCase2(regExModulado){
 	const re = new RegExp("[\\)\\]\\}\\{\\[\\(]", "g");
-	const countChar = (regExModulado.match(re) == null) ? 0 : regExModulado.match(re).length;
-	return (countChar%2 == 0) ? true : false;
+	if(!(regExModulado.match(re) == null)) return console.log("(valores ímpares de barramentos)  -> " + regExModulado.match(re));
+	return false;
 }
 
 function checkCase3(regExModulado){
-	let [countKeys, countBrackets, countParentheses] = [0,0,0];
+	let [countKeys, countBrackets, countParentheses, messageError] = [0,0,0, new Array()];
 	
 	for(let indexRegEx = 0; indexRegEx < regExModulado.length; indexRegEx++){
 		switch(regExModulado[indexRegEx]){
@@ -72,34 +73,34 @@ function checkCase3(regExModulado){
 				countParentheses++;
 				continue;
 			case "}":
-				if(countKeys == 0) return false;
+				if(countKeys == 0) messageError.push("}");
 				countKeys--;
 				continue;
 			case "]":
-				if(countBrackets == 0) return false;
+				if(countBrackets == 0) messageError.push("]");
 				countBrackets--;
 				continue;
 			case ")":
-				if(countParentheses == 0) return false;
+				if(countParentheses == 0) messageError.push(")");
 				countParentheses--;
 				continue;
 		}
 	}
-	if(countKeys > 0 | countBrackets > 0 | countParentheses > 0) return false;
-	return true;
+	if(countKeys > 0 | countBrackets > 0 | countParentheses > 0) return console.log("(abertura ou fechamento inválido) -> " + messageError);
+	return false;
 }
 
 function checkCase4(regExModulado){
-	let [countKeys, countBrackets, countParentheses] = [0,0,0];
+	let [countKeys, countBrackets, countParentheses, messageError] = [0,0,0, new Array()];
 	
 	for(let indexRegEx = 0; indexRegEx < regExModulado.length; indexRegEx++){
 		switch(regExModulado[indexRegEx]){
 			case "{":
-				if(countBrackets > 0 || countParentheses > 0) return false;
+				if(countBrackets > 0 || countParentheses > 0) messageError.push("{");
 				countKeys++;
 				continue;
 			case "[":
-				if(countParentheses > 0) return false;
+				if(countParentheses > 0) messageError.push("[");
 				countBrackets++;
 				continue;
 			case "(":
@@ -116,22 +117,26 @@ function checkCase4(regExModulado){
 				continue;
 		}
 	}
-	return true;
+	if(messageError.length > 0) return console.log("(hierarquia inválida)             -> " + messageError);
+	return false;
 }
 
 function checkCase5(regExModulado){
-	const regEx = new RegExp("[\\)|\\]|\\}][\\(|\\[|\\{]");
-	return ((regExModulado.match(regEx) == null) ? true : false);
+	const re = new RegExp("[\\)|\\]|\\}][\\(|\\[|\\{]", "g");
+	if(!(regExModulado.match(re) == null)) return console.log("(barramentos abertos)             -> " + regExModulado.match(re));
+	return false;
 }
 
 function checkCase6(regExModulado){
-	const regEx = new RegExp("(\\+|\\-|\\*|\\/){2}");
-	return ((regExModulado.match(regEx) == null) ? true : false);
+	const re = new RegExp("(\\+|\\-|\\*|\\/){2}", "g");
+	if(!(regExModulado.match(re) == null)) return console.log("(sinais consecutivos)             -> " + regExModulado.match(re));
+	return false;
 }
 
 function checkCase7(regExModulado){
-	const re = new RegExp("[a-zA-Z0-9][\\{|\\[|\\(]|[\\}|\\]|\\)][a-zA-Z0-9]");
-	return((regExModulado.match(re) == null) ? true : false);
+	const re = new RegExp("[a-zA-Z0-9][\\{|\\[|\\(]|[\\}|\\]|\\)][a-zA-Z0-9]", "g");
+	if(!(regExModulado.match(re) == null)) return console.log("(falta de sinais)                 -> " + regExModulado.match(re));
+	return false;
 }
 
 
@@ -139,7 +144,7 @@ const expressions =
 [
 	"(2)                ",
 	"{[(10)]]           ",
-	"[(24) / 8+5 *3]/ 6 ",
+	"[(24) / 8+5 *3]/ 6 }{ +- d( ",
 	"{[(42 + 3)/7       ",
 	"{[5 + 18]2 – 2}    ",
 	"a{                 ",
@@ -151,5 +156,5 @@ const expressions =
 	"}{                 "
 ];
 
-main(expressions)
+main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({})")
 
