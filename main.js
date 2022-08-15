@@ -20,7 +20,6 @@ function spacesRemove(regExString){
 /* função que irá validar, como analisador lexico a expressão enviada */
 function lexicalAnalyzer(regExModulado){
 	let countError = 0;
-	let messageTotalError = "";
 
 	/*caso 1: verifica existe apenas os caracteres possíveis da linguagem: letras, numeros, sinais, {}, [], ()*/
 	if(!checkCase1(regExModulado)) countError++;
@@ -86,7 +85,7 @@ function checkCase3(regExModulado){
 				continue;
 		}
 	}
-	if(countKeys > 0 | countBrackets > 0 | countParentheses > 0) return console.log("(abertura ou fechamento inválido) -> " + messageError);
+	if(countKeys > 0 || countBrackets > 0 || countParentheses > 0) return console.log("(abertura ou fechamento inválido) -> " + messageError);
 	return false;
 }
 
@@ -139,22 +138,6 @@ function checkCase7(regExModulado){
 	return false;
 }
 
-
-const expressions = 
-[
-	"(2)                ",
-	"{[(10)]]           ",
-	"[(24) / 8+5 *3]/ 6 }{ +- d( ",
-	"{[(42 + 3)/7       ",
-	"{[5 + 18]2 – 2}    ",
-	"a{                 ",
-	"10(2)              ",
-	"1                  ",
-	"{[5 + 18] . 2 – 2} ",
-	"(d+f[1]*4)         ",
-	"12+*4              ",
-	"}{                 "
-];
 
 main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({})")
 
