@@ -1,3 +1,5 @@
+<h3 align="center">Syntactic-Parser-</h3>
+
 <p align="center">
     Um analisador sintático que avalia uma expressão matemática, obedecendo a hierarquia das operações,ou seja, a sequência certa de chaves, colchetes e parenteses.
     <br />
