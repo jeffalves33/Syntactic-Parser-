@@ -19,14 +19,15 @@ def espaco(expression):
 def checkCase1(regExModulado):
 	regExModulado = regExModulado
 	expRegExp = r"[^a-z0-9A-Z\}\]\)\{\[\(\*\/\+\- ]"
-	if((re.findall(expRegExp, regExModulado) != None)): return print("(caracteres inválidos)            -> ", re.findall(expRegExp, regExModulado))
+	if((sizeVector(re.findall(expRegExp, regExModulado)) != 0)): return print("(caracteres inválidos)            -> ", re.findall(expRegExp, regExModulado))
 	else: return 0
 
 #caso 2: verifica se as chaves, colchetes e parenteses tem valores pares. isso não elimina o fato de poder existir expressões do tipo: {a-][+10}
 def checkCase2(regExModulado):
 	regExModulado = regExModulado
 	expRegExp = r"[\)\]\}\{\[\(]"
-	if((re.findall(expRegExp, regExModulado) != None)): return print("(valores ímpares de barramentos)  -> ", re.findall(expRegExp, regExModulado))
+	qtdRe = sizeVector(re.findall(expRegExp, regExModulado))
+	if((qtdRe % 2 != 0)): return print("(valores ímpares de barramentos)  -> ", qtdRe)
 	else: return 0
 
 #caso 3: verifica se as chaves, colchetes e parenteses tem seu valor sintáxico, ou seja, se ao abrir, se fecha
@@ -79,21 +80,21 @@ def checkCase4(regExModulado):
 def checkCase5(regExModulado):
 	regExModulado = regExModulado
 	expRegExp = r"[\)|\]|\}][\(|\[|\{]"
-	if((re.findall(expRegExp, regExModulado) != None)): return print("(barramentos abertos)             -> ", re.findall(expRegExp, regExModulado))
+	if(sizeVector(re.findall(expRegExp, regExModulado)) != 0): return print("(barramentos abertos)             -> ", re.findall(expRegExp, regExModulado))
 	else: return 0
 
 #caso 6: verifica se existe sinais consecutivos
 def checkCase6(regExModulado):
 	regExModulado = regExModulado
 	expRegExp = r"(\+|\-|\*|\/){2}"
-	if((re.findall(expRegExp, regExModulado) != None)): return print("(sinais consecutivos)             -> ", re.findall(expRegExp, regExModulado))
+	if(sizeVector(re.findall(expRegExp, regExModulado)) != 0): return print("(sinais consecutivos)             -> ", re.findall(expRegExp, regExModulado))
 	return 0
 
 #caso 7: verifica se existe um numero após ou antes de uma chave/colchetes/parenteses sem um sinal entre eles: 3{}, ()1, 2[]6
 def checkCase7(regExModulado):
 	regExModulado = regExModulado
 	expRegExp = r"[a-zA-Z0-9][\{|\[|\(]|[\}|\]|\)][a-zA-Z0-9]"
-	if((re.findall(expRegExp, regExModulado) != None)): return print("(falta de sinais)                 -> ", re.findall(expRegExp, regExModulado));
+	if(sizeVector(re.findall(expRegExp, regExModulado)) != 0): return print("(falta de sinais)                 -> ", re.findall(expRegExp, regExModulado));
 	return 0
 
 #função que irá validar, como analisador lexico a expressão enviada
@@ -131,4 +132,20 @@ def main(expression):
 	if(returnLexicalAnalyzer == 0): print("ACEITO!!!")
 	else: print(returnLexicalAnalyzer, " ERROR!!!")
 
-main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({}) ")
+main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({})")
+main("[(22+1)]")
+main("[(24) / (8+5) *3]/ 6")
+main("(24) / (8+5)")
+main("24 / (8+5)")
+main("(2)")
+main("{[(10)]]")
+main("[(24) / 8+5 *3]/ 6 }{ +- d(")
+main("{[(42 + 3)/7)")
+main("{[5 + 18]2 – 2})")
+main("a{)")
+main("10(2))")
+main("1)")
+main("{[5 + 18] . 2 – 2})")
+main("(d+f[1]*4))")
+main("12+*4)")
+main("}{)")

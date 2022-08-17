@@ -54,7 +54,7 @@ function checkCase1(regExModulado){
 function checkCase2(regExModulado){
 	const re = new RegExp("[\\)\\]\\}\\{\\[\\(]", "g");
 	const qtdRe = (regExModulado.match(re) == null) ? 0 : regExModulado.match(re).length; 
-	if(qtdRe % 2 != 0) return console.log("(valores ímpares de barramentos)  -> " + regExModulado.match(re).length);
+	if(qtdRe % 2 != 0) return console.log("(valores ímpares de barramentos)  -> " + qtdRe);
 	return false;
 }
 
@@ -140,8 +140,20 @@ function checkCase7(regExModulado){
 }
 
 
-main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({})")
-main("[(22+1)]")
-main("[(24) / (8+5) *3]/ 6")
-main("(24) / (8+5)")
-main("24 / (8+5)")
+main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({})");
+main("[(22+1)]");
+main("[(24) / (8+5) *3]/ 6");
+main("(24) / (8+5)");
+main("24 / (8+5)");
+main("(2)");
+main("{[(10)]]");
+main("[(24) / 8+5 *3]/ 6 }{ +- d(");
+main("{[(42 + 3)/7)");
+main("{[5 + 18]2 – 2})");
+main("a{)");
+main("10(2))");
+main("1)");
+main("{[5 + 18] . 2 – 2})");
+main("(d+f[1]*4))");
+main("12+*4)");
+main("}{)");
