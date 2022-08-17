@@ -22,25 +22,25 @@ function lexicalAnalyzer(regExModulado){
 	let countError = 0;
 
 	/*caso 1: verifica existe apenas os caracteres possíveis da linguagem: letras, numeros, sinais, {}, [], ()*/
-	if(!checkCase1(regExModulado)) countError++;
+	if(checkCase1(regExModulado)) countError++;
 
 	/*caso 2: verifica se as chaves, colchetes e parenteses tem valores pares. isso não elimina o fato de poder existir expressões do tipo: {a-][+10}*/
-	if(!checkCase2(regExModulado)) countError++;
+	if(checkCase2(regExModulado)) countError++;
 
 	/*caso 3: verifica se as chaves, colchetes e parenteses tem seu valor sintáxico, ou seja, se ao abrir, se fecha*/
-	if(!checkCase3(regExModulado)) countError++;
+	if(checkCase3(regExModulado)) countError++;
 	
 	/*caso 4: conferir se a hierarquia das chaves, colchetes e parenteses foram obedecidas*/
-	if(!checkCase4(regExModulado)) countError++;
+	if(checkCase4(regExModulado)) countError++;
 
 	/*caso 5: verifica se existe um final e início de chaves/colchetes/parenteses consecutivamente sem um sinal entre eles: }{, ][, )(*/
-	if(!checkCase5(regExModulado)) countError++;
+	if(checkCase5(regExModulado)) countError++;
 
 	/*caso 6: verifica se existe sinais consecutivos */
-	if(!checkCase6(regExModulado)) countError++;
+	if(checkCase6(regExModulado)) countError++;
 
 	/*caso 7: verifica se existe um numero após ou antes de uma chave/colchetes/parenteses sem um sinal entre eles: 3{}, ()1, 2[]6*/
-	if(!checkCase7(regExModulado)) countError++;
+	if(checkCase7(regExModulado)) countError++;
 	
 	return countError;
 }
@@ -53,7 +53,8 @@ function checkCase1(regExModulado){
 
 function checkCase2(regExModulado){
 	const re = new RegExp("[\\)\\]\\}\\{\\[\\(]", "g");
-	if(!(regExModulado.match(re) == null)) return console.log("(valores ímpares de barramentos)  -> " + regExModulado.match(re));
+	const qtdRe = (regExModulado.match(re) == null) ? 0 : regExModulado.match(re).length; 
+	if(qtdRe % 2 != 0) return console.log("(valores ímpares de barramentos)  -> " + regExModulado.match(re).length);
 	return false;
 }
 
@@ -140,4 +141,7 @@ function checkCase7(regExModulado){
 
 
 main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({})")
-
+main("[(22+1)]")
+main("[(24) / (8+5) *3]/ 6")
+main("(24) / (8+5)")
+main("24 / (8+5)")
