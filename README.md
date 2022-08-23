@@ -54,7 +54,7 @@ Se houver problemas de bug ou compatibilidade, entre em contato com o administra
 
 ## Argumentation
 
-Esse é um projeto de nível iniciante e básico. Não se detenha à documentação, aplicação, designer e afins, pois estamos, assim como você, em progresso e logo essa aplicação se tornará um legítimo e respeitado `Avaliador de Tutor`!
+Esse é um projeto da matéria Linguagens Formais e Autônomas. Não se detenha à documentação, aplicação, designer e afins, pois estamos, assim como você!
 
 
 ## Upcoming Updates
