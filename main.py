@@ -124,10 +124,6 @@ def lexicalAnalyzer(regExModulado):
 
 	return countError
 
-def lexicalAnalyzer(regExModulado):
-	regExModulado = regExModulado
-	expRegExp = r"[a-zA-Z0-9]"
-	print(expRegExp)
 	
 #função principal
 def main(expression):
