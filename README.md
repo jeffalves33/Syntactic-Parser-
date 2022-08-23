@@ -3,7 +3,7 @@
 <p align="center">
     Um analisador sintático que avalia uma expressão matemática, obedecendo a hierarquia das operações,ou seja, a sequência certa de chaves, colchetes e parenteses.
     <br />
-    <s>Acesse em: <a href="https://jeffalves33.github.io/Syntactic-Parser-/">Syntactic Parser</a></s>
+    Acesse em: <a href="https://docs.google.com/document/d/1UC0IbbpD6Ya9BxxicWlbJatgNMKcIag9_4QSUhLal8E/edit?usp=sharing">Syntactic Parser</a>
 </p>
 
 
