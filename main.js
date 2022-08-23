@@ -6,9 +6,15 @@
 function main(expression){
 	let regExModulado, stringAux;
 	regExModulado   = spacesRemove(expression);
-	console.log(regExModulado);
-	let returnLexicalAnalyzer = lexicalAnalyzer(regExModulado);
-	console.log((returnLexicalAnalyzer == 0) ? "ACEITO!!!" : returnLexicalAnalyzer + " ERROR!!!");
+
+	console.log("Analisador Léxico de: " + expression);
+	analisadorLexico(regExModulado);
+
+	console.log("---------------------------------------");
+
+	console.log("ANalisador Sintático de: " + expression);
+	let returnLexicalAnalyzer = analisadorSintatico(regExModulado);
+	console.log((returnLexicalAnalyzer == 0) ? "nenhum erro sintático encontrado" : returnLexicalAnalyzer + " ERROR!!!");
 }
 
 /* função que remove todos os espaços para ajudar na análisa léxica */
@@ -17,8 +23,83 @@ function spacesRemove(regExString){
 	return regExString.replace(re, "");
 }
 
+function analisadorLexico(regExModulado){
+	
+	const reAlfa   = new RegExp("[a-zA-Z]");
+	const reNum    = new RegExp("[0-9]");
+	const reSinais = new RegExp("\\+|\\-|\\*|\\/")
+	let [countAlfa, countNum, increment] = [0, 0, 0];
+
+	do{
+		//letras
+		if(regExModulado[increment].match(reAlfa) && countNum == 0){
+			countAlfa++;
+			if(regExModulado.length == increment + 1) console.log("IDENT");
+		}else{
+			if(countAlfa > 0){
+				countAlfa = 0;
+				console.log("IDENT");
+			}
+		}
+
+		//numeros
+		if(regExModulado[increment].match(reNum) && regExModulado.length != increment + 1){
+			countNum++;
+			if(regExModulado.length == increment + 1) console.log("NUM");
+		}else{
+			if(countNum > 0){
+				countNum = 0;
+				console.log("NUM")
+			}
+		}
+
+		//sinais
+		if(regExModulado[increment].match(reSinais)){
+			console.log("OPER");
+		}
+
+		//{
+		if(regExModulado[increment].match("\\{")){
+			console.log("ABRE-CHA");
+		}
+		
+		//[
+		if(regExModulado[increment].match("\\[")){
+			console.log("ABRE-COL");
+		}
+		
+		//(
+		if(regExModulado[increment].match("\\(")){
+			console.log("ABRE-PAR");
+		}
+		
+		//)
+		if(regExModulado[increment].match("\\)")){
+			console.log("FECHA-PAR");
+		}
+		
+		//]
+		if(regExModulado[increment].match("\\]")){
+			console.log("FECHA-COL");
+		}
+
+		//}
+		if(regExModulado[increment].match("\\}")){
+			console.log("FECHA-CHA");
+		}
+
+
+	increment++;
+	}while(increment != regExModulado.length)
+
+	const expressionEveryCaracteres = new RegExp("[^a-z0-9A-Z\\}\\]\\)\\{\\[\\(\\*\\/\\+\\- ]", "g");
+	let error = regExModulado.match(expressionEveryCaracteres) != null ? 
+	console.log("a avaliação léxica encontrou erros: " + regExModulado.match(expressionEveryCaracteres)) :
+	console.log("nenhum erro léxico encontrado");
+}
+
 /* função que irá validar, como analisador lexico a expressão enviada */
-function lexicalAnalyzer(regExModulado){
+function analisadorSintatico(regExModulado){
 	let countError = 0;
 
 	/*caso 1: verifica existe apenas os caracteres possíveis da linguagem: letras, numeros, sinais, {}, [], ()*/
@@ -140,20 +221,21 @@ function checkCase7(regExModulado){
 }
 
 
+main(" teste + (17 - a)");
 main("[(24) / 8+5 *3]/ 6 }{ +- d( & ({})");
 main("[(22+1)]");
-main("[(24) / (8+5) *3]/ 6");
-main("(24) / (8+5)");
-main("24 / (8+5)");
-main("(2)");
-main("{[(10)]]");
-main("[(24) / 8+5 *3]/ 6 }{ +- d(");
-main("{[(42 + 3)/7)");
-main("{[5 + 18]2 – 2})");
-main("a{)");
-main("10(2))");
-main("1)");
-main("{[5 + 18] . 2 – 2})");
-main("(d+f[1]*4))");
-main("12+*4)");
-main("}{)");
+//main("[(24) / (8+5) *3]/ 6");
+//main("(24) / (8+5)");
+//main("24 / (8+5)");
+//main("(2)");
+//main("{[(10)]]");
+//main("[(24) / 8+5 *3]/ 6 }{ +- d(");
+//main("{[(42 + 3)/7)");
+//main("{[5 + 18]2 – 2})");
+//main("a{)");
+//main("10(2))");
+//main("1)");
+//main("{[5 + 18] . 2 – 2})");
+//main("(d+f[1]*4))");
+//main("12+*4)");
+//main("}{)");
